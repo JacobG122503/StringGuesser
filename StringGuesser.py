@@ -27,6 +27,10 @@ def GuessLoop(word):
             guessedWord += letters[random.randint(0, len(letters) - 1)]
         if guessedWord in alreadyGuessed:
             continue
+        
+        #Calculate Chance
+        chance = (1/(total_possibilities - attempts)) * 100
+        
         attempts += 1
         alreadyGuessed.append(guessedWord)
 
@@ -34,11 +38,12 @@ def GuessLoop(word):
         elapsed_time = time.time() - start_time
         formatted_time = format_time(elapsed_time)
 
-        # Calculate luckiness
+        #Calculate luckiness
         luckiness = (1 - (attempts - 1) / (total_possibilities - 1)) * 100
 
-        print(f"|     {guessedWord}     |     {attempts:,}/{total_possibilities:,}     |     {formatted_time}     |     {luckiness:.2f}%     |")
+        print(f"|     {guessedWord}     |     {attempts:,}/{total_possibilities:,}     |     {formatted_time}     |     {luckiness:.2f}%     |     {chance:.5f}%     |")
         guessedRight = guessedWord == word
+        #next thing to add should be estimated time left. Take the last ten minutes
 
     print(f"\nPerfect match found! It only took {attempts:,} out of {total_possibilities:,} attempts and {formatted_time}.")
     print(f"You were {luckiness:.2f}% lucky.\n")
