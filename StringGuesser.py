@@ -5,13 +5,13 @@ import time
 #Run with python3 StringGuesser.py
 
 def main():
-    os.system('clear')
+    clear()
     user_input = input("Enter your string to be guessed: ")
     GuessLoop(user_input)
 
 
 def GuessLoop(word):  
-    os.system('clear')
+    clear()
     guessedRight = False
     wordLength = len(word)
     attempts = 0
@@ -34,16 +34,22 @@ def GuessLoop(word):
         attempts += 1
         alreadyGuessed.append(guessedWord)
 
-        #timer
+        #Timer
         elapsed_time = time.time() - start_time
         formatted_time = format_time(elapsed_time)
+
+        #Calculate estimated time left
+        attempts_per_second = attempts / elapsed_time
+        time_left = format_time((total_possibilities - attempts) / attempts_per_second)
+
 
         #Calculate luckiness
         luckiness = (1 - (attempts - 1) / (total_possibilities - 1)) * 100
 
-        print(f"|     {guessedWord}     |     {attempts:,}/{total_possibilities:,}     |     {formatted_time}     |     {luckiness:.2f}%     |     {chance:.5f}%     |")
+        print(f"|     {guessedWord}     |     {attempts:,}/{total_possibilities:,}     |     {formatted_time}     |     {luckiness:.2f}%     |     {chance:.5f}%     |     {time_left}     |")
         guessedRight = guessedWord == word
-        #next thing to add should be estimated time left. Take the last ten minutes
+        #next thing to add should be estimated time left. Take the last ten minutes (maybe 5)
+        #attempt/seconds
 
     print(f"\nPerfect match found! It only took {attempts:,} out of {total_possibilities:,} attempts and {formatted_time}.")
     print(f"You were {luckiness:.2f}% lucky.\n")
@@ -63,6 +69,9 @@ def format_time(seconds):
         minutes = (seconds % 3600) // 60
         seconds = seconds % 60
         return f"{int(hours)}h, {int(minutes)}m, {seconds:.2f}s"
+
+def clear():
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 if __name__ == "__main__":
     main()
