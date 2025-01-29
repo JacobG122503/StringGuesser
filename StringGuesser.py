@@ -1,8 +1,12 @@
 import os
 import random
 import time
+import smtplib
+import sys
+import config
 
 #Run with python3 StringGuesser.py
+#If you want it to text you when done, you must make a config file. 
 
 def main():
     clear()
@@ -48,11 +52,12 @@ def GuessLoop(word):
 
         print(f"|     {guessedWord}     |     {attempts:,}/{total_possibilities:,}     |     {formatted_time}     |     {luckiness:.2f}%     |     {chance:.5f}%     |     {time_left}     |")
         guessedRight = guessedWord == word
-        #next thing to add should be estimated time left. Take the last ten minutes (maybe 5)
-        #attempt/seconds
 
-    print(f"\nPerfect match found! It only took {attempts:,} out of {total_possibilities:,} attempts and {formatted_time}.")
-    print(f"You were {luckiness:.2f}% lucky.\n")
+    successMessage = f"\nPerfect match found! It only took {attempts:,} out of {total_possibilities:,} attempts and {formatted_time}. You were {luckiness:.2f}% lucky.\n "
+
+    print(f"{successMessage}")
+    send_message(successMessage)
+
 
 
 letters = list("abcdefghijklmnopqrstuvwxyz ")  
@@ -72,6 +77,15 @@ def format_time(seconds):
 
 def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
+
+def send_message(message):
+    auth = (config.EMAIL, config.PASSWORD)
+ 
+    server = smtplib.SMTP("smtp.gmail.com", 587)
+    server.starttls()
+    server.login(auth[0], auth[1])
+ 
+    server.sendmail(auth[0], config.NUMBER, message)
 
 if __name__ == "__main__":
     main()
