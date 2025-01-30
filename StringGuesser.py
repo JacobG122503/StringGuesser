@@ -12,7 +12,8 @@ def main():
     clear()
     user_input = input("Enter your string to be guessed: ")
     #GuessLoop(user_input)
-    GuessLoopSeq(user_input)
+    #GuessLoopSeq(user_input)
+    GuessLoopEfficient(user_input)
 
 
 def GuessLoop(word):  
@@ -66,7 +67,6 @@ def GuessLoopSeq(word):
     attempts = 0
     start_time = time.time()
     total_possibilities = len(letters) ** wordLength
-    probability = 1 / total_possibilities
 
     indices = [0] * wordLength  
 
@@ -93,6 +93,32 @@ def GuessLoopSeq(word):
             indices[i] = 0
 
     successMessage = f"\nPerfect match found! It only took {attempts:,} out of {total_possibilities:,} attempts and {formatted_time}.\n "
+
+    print(f"{successMessage}")
+    send_message(successMessage)
+
+def GuessLoopEfficient(word):  
+    clear()
+    guessedRight = False
+    wordLength = len(word)
+    start_time = time.time()
+
+    indices = [0] * wordLength  
+
+    while not guessedRight:
+        guessedWord = "".join(letters[i] for i in indices)
+
+        guessedRight = guessedWord == word
+
+        for i in range(wordLength - 1, -1, -1):
+            if indices[i] < len(letters) - 1:
+                indices[i] += 1
+                break
+            indices[i] = 0
+
+    elapsed_time = time.time() - start_time
+    formatted_time = format_time(elapsed_time)
+    successMessage = f"\nPerfect match found! It only took {formatted_time}.\n "
 
     print(f"{successMessage}")
     send_message(successMessage)
