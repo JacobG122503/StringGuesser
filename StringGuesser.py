@@ -11,10 +11,13 @@ import config
 def main():
     clear()
     user_input = input("Enter your string to be guessed: ")
-    #GuessLoop(user_input)
-    #GuessLoopSeq(user_input)
-    GuessLoopEfficient(user_input)
-
+    mode = input("\nChose mode and enter to start: \n(1) Random\n(2) Sequential (Statistically faster...)\n(3) Efficient (No Console)\n\n")
+    if mode == "1" :
+        GuessLoop(user_input)
+    if mode == "2" :
+        GuessLoopSeq(user_input)
+    if mode == "3" :
+        GuessLoopEfficient(user_input)
 
 def GuessLoop(word):  
     clear()
