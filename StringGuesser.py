@@ -8,18 +8,24 @@ import config
 #Run with python3 StringGuesser.py
 #If you want it to text you when done, you must make a config file. 
 
+letters = list("abcdefghijklmnopqrstuvwxyz ")#ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*")  
+
 def main():
+
     clear()
     user_input = input("Enter your string to be guessed: ")
     mode = input("\nChose mode and enter to start: \n(1) Random\n(2) Sequential (Statistically faster...)\n(3) Efficient (No Console)\n\n")
     if mode == "1" :
-        GuessLoop(user_input)
+        modeInfo = f"\nWord: {user_input}\nMode: Random\n"
+        GuessLoop(user_input, modeInfo)
     if mode == "2" :
-        GuessLoopSeq(user_input)
+        modeInfo = f"\nWord: {user_input}\nMode: Sequential\n"
+        GuessLoopSeq(user_input, modeInfo)
     if mode == "3" :
-        GuessLoopEfficient(user_input)
+        modeInfo = f"\nWord: {user_input}\nMode: Efficient\n"
+        GuessLoopEfficient(user_input, modeInfo)
 
-def GuessLoop(word):  
+def GuessLoop(word, modeInfo):  
     clear()
     guessedRight = False
     wordLength = len(word)
@@ -58,12 +64,12 @@ def GuessLoop(word):
         print(f"|     {guessedWord}     |     {attempts:,}/{total_possibilities:,}     |     {formatted_time}     |     {luckiness:.2f}%     |     {chance:.5f}%     |     {time_left}     |")
         guessedRight = guessedWord == word
 
-    successMessage = f"\nPerfect match found! It only took {attempts:,} out of {total_possibilities:,} attempts and {formatted_time}. You were {luckiness:.2f}% lucky.\n "
+    successMessage = f"{modeInfo}\nPerfect match found! It only took {attempts:,} out of {total_possibilities:,} attempts and {formatted_time}. You were {luckiness:.2f}% lucky.\n "
 
     print(f"{successMessage}")
     send_message(successMessage)
 
-def GuessLoopSeq(word):  
+def GuessLoopSeq(word, modeInfo):  
     clear()
     guessedRight = False
     wordLength = len(word)
@@ -95,12 +101,13 @@ def GuessLoopSeq(word):
                 break
             indices[i] = 0
 
-    successMessage = f"\nPerfect match found! It only took {attempts:,} out of {total_possibilities:,} attempts and {formatted_time}.\n "
+    successMessage = f"{modeInfo}\nPerfect match found! It only took {attempts:,} out of {total_possibilities:,} attempts and {formatted_time}.\n "
 
     print(f"{successMessage}")
     send_message(successMessage)
 
-def GuessLoopEfficient(word):  
+def GuessLoopEfficient(word, modeInfo):  
+    #letters = list("etaoinshrdlcumwfgypbvkjxqz ") #more efficient sorting of letters
     clear()
     guessedRight = False
     wordLength = len(word)
@@ -121,12 +128,10 @@ def GuessLoopEfficient(word):
 
     elapsed_time = time.time() - start_time
     formatted_time = format_time(elapsed_time)
-    successMessage = f"\nPerfect match found! It only took {formatted_time}.\n "
+    successMessage = f"{modeInfo}\nPerfect match found! It only took {formatted_time}.\n "
 
     print(f"{successMessage}")
     send_message(successMessage)
-
-letters = list("abcdefghijklmnopqrstuvwxyz ")#ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*")  
 
 def format_time(seconds):
     if seconds < 60:
@@ -145,6 +150,7 @@ def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 def send_message(message):
+    return
     auth = (config.EMAIL, config.PASSWORD)
  
     server = smtplib.SMTP("smtp.gmail.com", 587)
