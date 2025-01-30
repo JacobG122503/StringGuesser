@@ -140,7 +140,7 @@ def GuessLoopEfficient(word, modeInfo):
 
 def GuessLoopWOF(word, modeInfo): 
     #Since this is incredibly fast I am doing all letters, numbers, and symbols
-    letters = list("abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*?")  
+    letters = list("abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ`1234567890-=[]\;'/.,~!@#$%^&*()_+{}|:\"?><")  
     clear()
     guessedRight = False
     wordLength = len(word)
@@ -153,14 +153,14 @@ def GuessLoopWOF(word, modeInfo):
 
     while not guessedRight :
         #Randomly generate characters, if correct, put in slot
-        for i in range(wordLength):  
+        for i in range(wordLength): 
+            if guessedWord[i] != '_' : continue 
             newChar = letters[random.randint(0, len(letters) - 1)]
             if newChar == word[i] :
                 guessedWord = list(guessedWord)
                 guessedWord[i] = newChar
                 guessedWord = "".join(guessedWord)
 
-        
         attempts += 1
 
         #Timer
@@ -168,7 +168,7 @@ def GuessLoopWOF(word, modeInfo):
         formatted_time = format_time(elapsed_time)
 
         print(f"|     {guessedWord}     |     {attempts:,}     |     {formatted_time}     |")
-        time.sleep(0.08)
+        time.sleep(0.01)
         guessedRight = guessedWord == word
 
     successMessage = f"{modeInfo}\nPerfect match found! It only took {attempts:,} attempts and {formatted_time}.\n "
