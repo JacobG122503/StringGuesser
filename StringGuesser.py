@@ -11,7 +11,8 @@ import config
 def main():
     clear()
     user_input = input("Enter your string to be guessed: ")
-    GuessLoop(user_input)
+    #GuessLoop(user_input)
+    GuessLoopSeq(user_input)
 
 
 def GuessLoop(word):  
@@ -58,9 +59,45 @@ def GuessLoop(word):
     print(f"{successMessage}")
     send_message(successMessage)
 
+def GuessLoopSeq(word):  
+    clear()
+    guessedRight = False
+    wordLength = len(word)
+    attempts = 0
+    start_time = time.time()
+    total_possibilities = len(letters) ** wordLength
+    probability = 1 / total_possibilities
 
+    indices = [0] * wordLength  
 
-letters = list("abcdefghijklmnopqrstuvwxyz ")  
+    while not guessedRight:
+        attempts += 1
+        guessedWord = "".join(letters[i] for i in indices)
+
+        # Timer
+        elapsed_time = time.time() - start_time
+        formatted_time = format_time(elapsed_time)
+
+        # Calculate estimated time left
+        attempts_per_second = attempts / elapsed_time
+        time_left = format_time((total_possibilities - attempts) / attempts_per_second)
+
+        print(f"|     {guessedWord}     |     {attempts:,}/{total_possibilities:,}     |     {formatted_time}     |     {time_left}     |")
+        guessedRight = guessedWord == word
+
+        #simple base counter used to "count" the characters
+        for i in range(wordLength - 1, -1, -1):
+            if indices[i] < len(letters) - 1:
+                indices[i] += 1
+                break
+            indices[i] = 0
+
+    successMessage = f"\nPerfect match found! It only took {attempts:,} out of {total_possibilities:,} attempts and {formatted_time}.\n "
+
+    print(f"{successMessage}")
+    send_message(successMessage)
+
+letters = list("abcdefghijklmnopqrstuvwxyz ")#ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*")  
 
 def format_time(seconds):
     if seconds < 60:
