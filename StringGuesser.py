@@ -8,13 +8,15 @@ import config
 #Run with python3 StringGuesser.py
 #If you want it to text you when done, you must make a config file. 
 
+ENABLE_NOTIFICATIONS = False
+
 letters = list("abcdefghijklmnopqrstuvwxyz ")#ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*")  
 
 def main():
 
     clear()
     user_input = input("Enter your string to be guessed: ")
-    mode = input("\nChose mode and enter to start: \n(1) Random\n(2) Sequential (Statistically faster...)\n(3) Efficient (No Console)\n\n")
+    mode = input("\nChose mode and enter to start: \n(1) Random\n(2) Sequential (Statistically faster...)\n(3) Efficient (No Console)\n(4) Wheel of Fortune\n")
     if mode == "1" :
         modeInfo = f"\nWord: {user_input}\nMode: Random\n"
         GuessLoop(user_input, modeInfo)
@@ -24,6 +26,9 @@ def main():
     if mode == "3" :
         modeInfo = f"\nWord: {user_input}\nMode: Efficient\n"
         GuessLoopEfficient(user_input, modeInfo)
+    if mode == "4" :
+        modeInfo = f"\nWord: {user_input}\nMode: Wheel of Fortune\n"
+        GuessLoopWOF(user_input, modeInfo)
 
 def GuessLoop(word, modeInfo):  
     clear()
@@ -133,6 +138,44 @@ def GuessLoopEfficient(word, modeInfo):
     print(f"{successMessage}")
     send_message(successMessage)
 
+def GuessLoopWOF(word, modeInfo): 
+    #Since this is incredibly fast I am doing all letters, numbers, and symbols
+    letters = list("abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*?")  
+    clear()
+    guessedRight = False
+    wordLength = len(word)
+    attempts = 0
+    start_time = time.time()
+    
+    guessedWord = ""
+    for i in range(wordLength) :
+        guessedWord += "_"
+
+    while not guessedRight :
+        #Randomly generate characters, if correct, put in slot
+        for i in range(wordLength):  
+            newChar = letters[random.randint(0, len(letters) - 1)]
+            if newChar == word[i] :
+                guessedWord = list(guessedWord)
+                guessedWord[i] = newChar
+                guessedWord = "".join(guessedWord)
+
+        
+        attempts += 1
+
+        #Timer
+        elapsed_time = time.time() - start_time
+        formatted_time = format_time(elapsed_time)
+
+        print(f"|     {guessedWord}     |     {attempts:,}     |     {formatted_time}     |")
+        time.sleep(0.08)
+        guessedRight = guessedWord == word
+
+    successMessage = f"{modeInfo}\nPerfect match found! It only took {attempts:,} attempts and {formatted_time}.\n "
+
+    print(f"{successMessage}")
+    send_message(successMessage)
+
 def format_time(seconds):
     if seconds < 60:
         return f"{seconds:.2f}s"
@@ -150,7 +193,8 @@ def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 def send_message(message):
-    return
+    if not ENABLE_NOTIFICATIONS:
+        return
     auth = (config.EMAIL, config.PASSWORD)
  
     server = smtplib.SMTP("smtp.gmail.com", 587)
