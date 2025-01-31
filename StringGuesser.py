@@ -10,11 +10,24 @@ import config
 
 ENABLE_NOTIFICATIONS = False
 
-letters = list("abcdefghijklmnopqrstuvwxyz ")#ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*")  
+letters = list("abcdefghijklmnopqrstuvwxyz ") 
+
+#NOTE ANDDDDDD For the efficient mode, every 1 minute print estimated time left. I think....
 
 def main():
-
     clear()
+    
+    #Ask for notifications
+    global ENABLE_NOTIFICATIONS
+    if input("Do you want notifications? (y/n): ") == "y" :
+        ENABLE_NOTIFICATIONS = True
+    
+    #Ask letter set
+    global letters
+    if input("Do you want only lowercase letters to guess (faster)? (y/n): ") == "n" :
+        letters = list("abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ`1234567890-=[]\;'/.,~!@#$%^&*()_+{}|:\"?><")  
+    
+    
     user_input = input("Enter your string to be guessed: ")
     mode = input("\nChose mode and enter to start: \n(1) Random\n(2) Sequential (Statistically faster...)\n(3) Efficient (No Console)\n(4) Wheel of Fortune\n")
     if mode == "1" :
