@@ -12,8 +12,6 @@ ENABLE_NOTIFICATIONS = False
 
 letters = list("abcdefghijklmnopqrstuvwxyz ") 
 
-#NOTE ANDDDDDD For the efficient mode, every 1 minute print estimated time left. I think....
-
 def main():
     clear()
     
@@ -24,7 +22,7 @@ def main():
     
     #Ask letter set
     global letters
-    if input("Do you want only lowercase letters to guess (faster)? (y/n): ") == "n" :
+    if input("Do you want only lowercase letters enabled? (faster) (y/n): ") == "n" :
         letters = list("abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ`1234567890-=[]\;'/.,~!@#$%^&*()_+{}|:\"?><")  
     
     
@@ -125,15 +123,24 @@ def GuessLoopSeq(word, modeInfo):
     send_message(successMessage)
 
 def GuessLoopEfficient(word, modeInfo):  
-    #letters = list("etaoinshrdlcumwfgypbvkjxqz ") #more efficient sorting of letters
     clear()
     guessedRight = False
     wordLength = len(word)
     start_time = time.time()
-
+    attempts = 0
+    total_possibilities = len(letters) ** wordLength
     indices = [0] * wordLength  
 
     while not guessedRight:
+        elapsed_time = time.time() - start_time
+        #See if a minute has passed, if so print an estimated time left.
+        if elapsed_time % 60 == 0 :
+            attempts_per_second = attempts / elapsed_time 
+            time_left = format_time((total_possibilities - attempts) / attempts_per_second)
+            print(f"{time.strftime("%I:%M:%S %p")} - ({attempts/total_possibilities:.2f}%) - Estimated time left: {time_left}")
+        
+        #Seq code just lessened down a lot
+        attempts += 1
         guessedWord = "".join(letters[i] for i in indices)
 
         guessedRight = guessedWord == word
@@ -150,10 +157,18 @@ def GuessLoopEfficient(word, modeInfo):
 
     print(f"{successMessage}")
     send_message(successMessage)
+    #Speed tests
+    # jacob - 15.95 (Seq)
+    #Before Changes (Eff):
+    # jacob - 2.04 
+    # jacobg - 58.40 
+    # Jacob 
+    #After Changes: 
+    # jacob - 2.63
+    # jacobg - (1) 1m 18s (2) 1m 11s
+    # Jacob - 
 
 def GuessLoopWOF(word, modeInfo): 
-    #Since this is incredibly fast I am doing all letters, numbers, and symbols
-    letters = list("abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ`1234567890-=[]\;'/.,~!@#$%^&*()_+{}|:\"?><")  
     clear()
     guessedRight = False
     wordLength = len(word)
@@ -188,6 +203,7 @@ def GuessLoopWOF(word, modeInfo):
 
     print(f"{successMessage}")
     send_message(successMessage)
+    
 
 def format_time(seconds):
     if seconds < 60:
