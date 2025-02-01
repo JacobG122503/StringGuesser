@@ -134,10 +134,10 @@ def GuessLoopEfficient(word, modeInfo):
     while not guessedRight:
         elapsed_time = time.time() - start_time
         #See if a minute has passed, if so print an estimated time left.
-        if elapsed_time % 60 == 0 :
+        if elapsed_time % 180 == 0 :
             attempts_per_second = attempts / elapsed_time 
             time_left = format_time((total_possibilities - attempts) / attempts_per_second)
-            print(f"{time.strftime("%I:%M:%S %p")} - ({attempts/total_possibilities:.2f}%) - Estimated time left: {time_left}")
+            print(f"{time.strftime("%I:%M:%S %p")} - ({((attempts/total_possibilities)*100):.2f}%) - Estimated time left: {time_left}")
         
         #Seq code just lessened down a lot
         attempts += 1
